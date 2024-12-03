@@ -1,22 +1,34 @@
 public class SupportRequest {
-    private String location;
-    private String type;
+    private String locationName;
+    private double latitude;
+    private double longitude;
+    private String requestType;
 
-    public SupportRequest(String location, String type) {
-        this.location = location;
-        this.type = type;
+    public SupportRequest(String locationName, double latitude, double longitude, String requestType) {
+        this.locationName = locationName;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.requestType = requestType;
     }
 
-    public String getLocation() {
-        return location;
+    public String getLocationName() {
+        return locationName;
     }
 
-    public String getType() {
-        return type;
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public String getRequestType() {
+        return requestType;
     }
 
     @Override
     public String toString() {
-        return location + " [" + type + "]";
+        return requestType + " needed at " + locationName + " (" + latitude + ", " + longitude + ")";
     }
 }
