@@ -104,11 +104,13 @@ public class ReliefSupplyApp extends JFrame {
         JTextField latitudeField = new JTextField();
         JTextField longitudeField = new JTextField();
   
-        JComboBox<String> comboBox=new JComboBox<>();
-        String[] disasterType= {"Flood","Earth Slips"};
+       
+        String[] disasterType= {"Floods","Land Slides"};
+        JComboBox<String> comboBox = new JComboBox<>(disasterType);
         
-        JComboBox<String> comboBox1 = new JComboBox<>();
-        String[] requestedResources={"Foods","water","Medicines"};
+        
+        String[] requestedResources={"Food","Water","Medicines"};
+        JComboBox<String> comboBox1 = new JComboBox<>(requestedResources);
        
 
         inputPanel.add(new JLabel("Request Location Name:"));
