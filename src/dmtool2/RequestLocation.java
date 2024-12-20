@@ -1,25 +1,24 @@
 package reliefcenterapp;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class RequestLocation {
     private String name;
     private double latitude;
     private double longitude;
-    private String contactNumber;
+    private String contact;
     private String district;
     private String disasterType;
-    private Map<String, Integer> requestedResources;  // Requested resources
+    private boolean completed;  // New field to track completion status
 
-    public RequestLocation(String name, double latitude, double longitude, String contactNumber, String district, String disasterType) {
+    public RequestLocation(String name, double latitude, double longitude, String contact, String district, String disasterType) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.contactNumber = contactNumber;
+        this.contact = contact;
         this.district = district;
         this.disasterType = disasterType;
-        this.requestedResources = new HashMap<>();
+        this.completed = false;
     }
 
     public String getName() {
@@ -34,8 +33,8 @@ public class RequestLocation {
         return longitude;
     }
 
-    public String getContactNumber() {
-        return contactNumber;
+    public String getContact() {
+        return contact;
     }
 
     public String getDistrict() {
@@ -46,22 +45,19 @@ public class RequestLocation {
         return disasterType;
     }
 
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
     public Map<String, Integer> getRequestedResources() {
-        return requestedResources;
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    // Add requested resource
-    public void addRequestedResource(String resource, int quantity) {
-        requestedResources.put(resource, quantity);
-    }
-
-    // Remove requested resource after allocation
-    public void removeRequestedResource(String resource) {
-        requestedResources.remove(resource);
-    }
-
-    @Override
-    public String toString() {
-        return name + " (" + disasterType + ")";
+    public void removeRequestedResource(String resourceType) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

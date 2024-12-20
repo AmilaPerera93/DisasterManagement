@@ -1,4 +1,3 @@
-
 package reliefcenterapp;
 
 import dmtool2.ReliefCenter;
@@ -218,50 +217,68 @@ public class ReliefCenterApp extends JFrame {
     }
 
     private JPanel createRequestManagementPanel() {
-    JPanel panel = new JPanel(new BorderLayout(10, 10));
+        JPanel panel = new JPanel(new BorderLayout(10, 10));
 
-    JPanel topPanel = new JPanel(new FlowLayout());
-    topPanel.add(new JLabel("Select Request Location:"));
-    topPanel.add(requestDropdown);
+        JPanel topPanel = new JPanel(new FlowLayout());
+        topPanel.add(new JLabel("Select Request Location:"));
+        topPanel.add(requestDropdown);
 
-    JLabel closestReliefCenterLabel = new JLabel("Closest Relief Center: None");
-    JButton findClosestButton = new JButton("Find Closest Relief Center");
+        JLabel closestReliefCenterLabel = new JLabel("Closest Relief Center: None");
+        JButton findClosestButton = new JButton("Find Closest Relief Center");
 
-    findClosestButton.addActionListener(e -> {
-        String selectedLocationName = (String) requestDropdown.getSelectedItem();
-        if (selectedLocationName != null) {
-            ReliefCenter closestCenter = reliefQueue.getClosestReliefCenter(selectedLocationName);
-            RequestLocation selectedLocation = reliefQueue.getRequestLocation(selectedLocationName);
+        findClosestButton.addActionListener(e -> {
+            String selectedLocationName = (String) requestDropdown.getSelectedItem();
+            if (selectedLocationName != null) {
+                ReliefCenter closestCenter = reliefQueue.getClosestReliefCenter(selectedLocationName);
+                RequestLocation selectedLocation = reliefQueue.getRequestLocation(selectedLocationName);
 
-            if (closestCenter != null && selectedLocation != null) {
-                closestReliefCenterLabel.setText("Closest Relief Center: " + closestCenter.getName());
+                if (closestCenter != null && selectedLocation != null) {
+                    closestReliefCenterLabel.setText("Closest Relief Center: " + closestCenter.getName());
 
-                // Display the map using the MapboxApp class
-                double startLat = selectedLocation.getLatitude();
-                double startLng = selectedLocation.getLongitude();
-                double endLat = closestCenter.getLatitude();
-                double endLng = closestCenter.getLongitude();
+                    // Display the map using the MapboxApp class
+                    double startLat = selectedLocation.getLatitude();
+                    double startLng = selectedLocation.getLongitude();
+                    double endLat = closestCenter.getLatitude();
+                    double endLng = closestCenter.getLongitude();
 
-                MapboxApp.displayRoute(startLat, startLng, endLat, endLng);
-            } else {
-                closestReliefCenterLabel.setText("Closest Relief Center: Not Found");
-                JOptionPane.showMessageDialog(panel, "Could not find a closest relief center.", "Error", JOptionPane.ERROR_MESSAGE);
+                    MapboxApp.displayRoute(startLat, startLng, endLat, endLng);
+                } else {
+                    closestReliefCenterLabel.setText("Closest Relief Center: Not Found");
+                    JOptionPane.showMessageDialog(panel, "Could not find a closest relief center.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-        }
-    });
+        });
 
-    JPanel buttonPanel = new JPanel(new FlowLayout());
-    buttonPanel.add(findClosestButton);
+        // New button for marking the request location as completed
+        JButton markAsCompletedButton = new JButton("Mark Request as Completed");
+        markAsCompletedButton.addActionListener(e -> {
+            String selectedLocationName = (String) requestDropdown.getSelectedItem();
+            if (selectedLocationName != null) {
+                boolean success = reliefQueue.markRequestAsCompleted(selectedLocationName);
+                if (success) {
+                    JOptionPane.showMessageDialog(panel, "Request location marked as completed.");
+                    // Optionally, you can remove the location from the dropdown
+                    requestDropdown.removeItem(selectedLocationName);
+                } else {
+                    JOptionPane.showMessageDialog(panel, "Failed to mark the request location as completed.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
 
-    panel.add(topPanel, BorderLayout.NORTH);
-    panel.add(closestReliefCenterLabel, BorderLayout.CENTER);
-    panel.add(buttonPanel, BorderLayout.SOUTH);
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.add(findClosestButton);
+        buttonPanel.add(markAsCompletedButton); // Add the new button here
 
-    return panel;
-}
+        panel.add(topPanel, BorderLayout.NORTH);
+        panel.add(closestReliefCenterLabel, BorderLayout.CENTER);
+        panel.add(buttonPanel, BorderLayout.SOUTH);
 
+        return panel;
+    }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new ReliefCenterApp().setVisible(true));
-}
+        SwingUtilities.invokeLater(() -> {
+            new ReliefCenterApp().setVisible(true);
+        });
+    }
 }
