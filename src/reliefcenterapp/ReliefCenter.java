@@ -46,9 +46,9 @@ public class ReliefCenter {
     }
 
     // Add a resource to the relief center's available resources
-    public void addResource(String resourceType, int quantity) {
-        availableResources.put(resourceType, availableResources.getOrDefault(resourceType, 0) + quantity);
-    }
+   public void addResource(Resource resourceType) {
+    availableResources.put(resourceType.getName(), availableResources.getOrDefault(resourceType.getName(), 0) + resourceType.getQuantity());
+}
 
     // Allocate resources to a request location and update available resources
     public boolean allocateResources(RequestLocation requestLocation) {

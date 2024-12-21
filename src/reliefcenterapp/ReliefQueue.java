@@ -4,6 +4,7 @@ package reliefcenterapp;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class ReliefQueue {
     private final List<ReliefCenter> reliefCenters;
     private final List<RequestLocation> requestLocations;
@@ -16,11 +17,26 @@ public class ReliefQueue {
     public void addReliefCenter(ReliefCenter center) {
         reliefCenters.add(center);
     }
+    
+    public ReliefCenter getReliefCenterByName(String name) {
+    for (ReliefCenter center : reliefCenters) {
+        if (center.getName().equals(name)) {
+            return center;
+        }
+    }
+    return null; // Return null if no relief center matches the name
+}
 
     public void addRequestLocation(RequestLocation location) {
         requestLocations.add(location);
     }
-
+    public List<String> getReliefCenterNames() {
+        List<String> names = new ArrayList<>();
+        for (ReliefCenter center : reliefCenters) {
+            names.add(center.getName());
+        }
+        return names;
+    }
     public ReliefCenter getClosestReliefCenter(String locationName) {
         RequestLocation location = getRequestLocation(locationName);
         if (location == null) {
@@ -72,4 +88,8 @@ public class ReliefQueue {
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c;  // Distance in kilometers
 }
+
+    ReliefCenter getReliefCenter(String reliefCenterName) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
