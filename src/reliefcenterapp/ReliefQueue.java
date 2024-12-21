@@ -4,6 +4,7 @@ package reliefcenterapp;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class ReliefQueue {
     private final List<ReliefCenter> reliefCenters;
     private final List<RequestLocation> requestLocations;
@@ -16,11 +17,19 @@ public class ReliefQueue {
     public void addReliefCenter(ReliefCenter center) {
         reliefCenters.add(center);
     }
+    
+    
 
     public void addRequestLocation(RequestLocation location) {
         requestLocations.add(location);
     }
-
+    public List<String> getReliefCenterNames() {
+        List<String> names = new ArrayList<>();
+        for (ReliefCenter center : reliefCenters) {
+            names.add(center.getName());
+        }
+        return names;
+    }
     public ReliefCenter getClosestReliefCenter(String locationName) {
         RequestLocation location = getRequestLocation(locationName);
         if (location == null) {

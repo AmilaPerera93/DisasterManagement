@@ -40,10 +40,11 @@ public class ReliefCenterApp extends JFrame {
         setLayout(new BorderLayout());
 
         JTabbedPane tabbedPane = new JTabbedPane();
-
+        
         tabbedPane.addTab("Relief Centers", createReliefCenterPanel());
         tabbedPane.addTab("Request Locations", createRequestLocationPanel());
         tabbedPane.addTab("Manage Requests", createRequestManagementPanel());
+        tabbedPane.addTab("Resource Management", createResourceManagementPanel());
 
         add(tabbedPane, BorderLayout.CENTER);
     }
@@ -275,6 +276,103 @@ public class ReliefCenterApp extends JFrame {
 
         return panel;
     }
+    
+    private JPanel createResourceManagementPanel() {
+    JPanel panel = new JPanel(new BorderLayout(10, 10));
+
+    JPanel inputPanel = new JPanel(new GridBagLayout());
+    inputPanel.setBorder(BorderFactory.createTitledBorder("Add Resource"));
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.insets = new Insets(5, 5, 5, 5);
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+
+    // Input Fields
+    JTextField resourceNameField = new JTextField(15);
+    JTextField resourceQuantityField = new JTextField(15);
+    JComboBox<String> reliefCenterDropdown = new JComboBox<>();
+    JComboBox<String> resourceTypeDropdown = new JComboBox<>(new String[]{"Food", "Water", "Medicine", "Blankets", "Other"});
+
+    // Add Labels and Fields to Input Panel
+    gbc.gridx = 0; gbc.gridy = 0;
+    inputPanel.add(new JLabel("Resource Name:"), gbc);
+    gbc.gridx = 1; inputPanel.add(resourceNameField, gbc);
+
+    gbc.gridx = 0; gbc.gridy = 1;
+    inputPanel.add(new JLabel("Resource Quantity:"), gbc);
+    gbc.gridx = 1; inputPanel.add(resourceQuantityField, gbc);
+
+    gbc.gridx = 0; gbc.gridy = 2;
+    inputPanel.add(new JLabel("Relief Center:"), gbc);
+    gbc.gridx = 1; inputPanel.add(reliefCenterDropdown, gbc);
+
+    gbc.gridx = 0; gbc.gridy = 3;
+    inputPanel.add(new JLabel("Resource Type:"), gbc);
+    gbc.gridx = 1; inputPanel.add(resourceTypeDropdown, gbc);
+
+    // Add Button to Add Resource
+    JButton addResourceButton = new JButton("Add Resource");
+    gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
+    gbc.anchor = GridBagConstraints.CENTER;
+    inputPanel.add(addResourceButton, gbc);
+
+    // Populate relief center dropdown
+    populateReliefCenterDropdown(reliefCenterDropdown);
+
+    // Action listener for adding resource
+    addResourceButton.addActionListener(e -> {
+        String resourceName = resourceNameField.getText().trim();
+        String quantityText = resourceQuantityField.getText().trim();
+        String reliefCenterName = (String) reliefCenterDropdown.getSelectedItem();
+        String resourceType = (String) resourceTypeDropdown.getSelectedItem();
+
+        try {
+            int quantity = Integer.parseInt(quantityText);
+
+            if (!resourceName.isEmpty() && quantity > 0 && reliefCenterName != null) {
+                Resource resource = new Resource(resourceName, quantity, resourceType);
+                ReliefCenter reliefCenter = reliefQueue.getReliefCenter(reliefCenterName);
+
+                if (reliefCenter != null) {
+                    reliefCenter.addResource(resource);  // Add resource to the selected relief center
+                    JOptionPane.showMessageDialog(panel, "Resource added successfully.");
+
+                    // Optionally, update any UI elements like lists or tables to reflect the new resource
+                } else {
+                    JOptionPane.showMessageDialog(panel, "Selected relief center not found.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+
+                // Clear fields
+                resourceNameField.setText("");
+                resourceQuantityField.setText("");
+                reliefCenterDropdown.setSelectedIndex(0);
+                resourceTypeDropdown.setSelectedIndex(0);
+            } else {
+                JOptionPane.showMessageDialog(panel, "Please fill in all fields correctly.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(panel, "Please enter a valid number for quantity.", "Input Error", JOptionPane.ERROR_MESSAGE);
+        }
+    });
+
+    // Resource List Panel
+    JPanel resourceListPanel = new JPanel(new BorderLayout());
+    JList<String> resourceList = new JList<>(new DefaultListModel<>());
+    JScrollPane listScrollPane = new JScrollPane(resourceList);
+    listScrollPane.setBorder(BorderFactory.createTitledBorder("Resources for Selected Relief Center"));
+
+    // Add input panel and resource list panel to the main panel
+    panel.add(inputPanel, BorderLayout.NORTH);
+    panel.add(listScrollPane, BorderLayout.CENTER);
+
+    return panel;
+}
+
+private void populateReliefCenterDropdown(JComboBox<String> reliefCenterDropdown) {
+    reliefCenterDropdown.removeAllItems(); // Clear existing items
+    for (String centerName : reliefQueue.getReliefCenterNames()) {
+        reliefCenterDropdown.addItem(centerName); // Add relief center names to dropdown
+    }
+}
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
