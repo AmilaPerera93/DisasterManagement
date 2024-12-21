@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-
+//Merged the branches
 public class ReliefSupplyApp extends JFrame {
     private final ReliefQueue reliefQueue;
     private final DefaultListModel<String> reliefCenterListModel;
